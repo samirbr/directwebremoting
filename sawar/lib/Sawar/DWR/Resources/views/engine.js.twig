@@ -1,0 +1,48 @@
+DWR = DWR || { };
+
+DWR.create = function (data) {
+  if (data.namespace in DWR && data.constructor in DWR[data.namespace]) { 
+    var entity = DWR[data.namespace][data.constructor];
+    for (var property in data) {
+      entity[property] = data[property];
+    }
+    return new entity();
+  } else {
+    throw new Error({{ "Namespace or class not found."|trans }});
+  }
+  
+  return;
+}
+
+DWR.remote = function (opts) {
+  var data = $.parseJSON($.ajax({
+    url: {{ url }},
+    data: opts,
+    dataType: 'json',
+    type: 'post',
+    async: false
+  }).reponseText);
+  
+  return DWR.parse(data);
+}
+
+DWR.parse = function (data) {
+  switch (valueof data) {
+    case 'array' :
+      return data.map(function (value) {
+        return DWR.parse(value);
+      });
+      break;
+      
+    case 'object' :
+      return DWR.create(data);      
+      break;
+      
+    case 'string' :
+    case 'number' :
+    case 'boolean' :
+    default :          
+      return data;
+      break;
+  } 
+}

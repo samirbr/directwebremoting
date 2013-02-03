@@ -1,0 +1,39 @@
+var DWR = DWR || { };
+
+var {{ namespace }} = {{ namespace }} || { };
+
+var {{ class }} = DWR.{{ namespace }}.{{ class }} = function ({{ constructor.args|join(', ') }}) {
+  this.constructor = '{{ class }}';
+  this.namespace = '{{ namespace }}';
+  
+  {% for arg in constructor.args %}
+  this.{{ arg }} = {{ arg }};
+  {% endfor %}
+  
+  {% for property in properties %}
+   this.{{ property }};
+  {% endfor %}
+  
+  {% for method in methods %}
+  this.{{ method.name }} = function ({{ method.args|join(', ') }}) {
+    return DWR.remote({
+      "ns": "{{ namespace }}",
+      "entity": "{{ class }}",
+      "method": "{{ method.name }}",
+      "params": arguments
+    });
+  }
+  {% endfor %}
+}
+
+{% for method in static_methods %}
+  {{ entity }}.{{ method.name }} = DWR.{{ namespace }}.{{ class }}.{{ method.name }} = function ({{ method.args|join(', ') }}) {
+    return DWR.remote({
+      "ns": "{{ namespace }}",
+      "entity": "{{ class }}",
+      "method": "{{ method.name }}",
+      "params": arguments,
+      "is_static": true
+    });
+  }
+{% endfor %}

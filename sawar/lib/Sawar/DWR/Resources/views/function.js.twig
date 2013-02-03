@@ -1,0 +1,11 @@
+var {{ namespace }} = {{ namespace }} || { };
+
+{% for func in functions %}
+{{ namespace }}.{{ func.name }} = function ({{ func.args|join(', ') }}) {
+  return DWR.remote({
+      "ns": "{{ namespace }}",
+      "method": "{{ func.name }}",
+      "params": arguments
+    });
+}
+{% endfor %}
