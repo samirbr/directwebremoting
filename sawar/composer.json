@@ -2,12 +2,9 @@
   "name": "sawar/directwebremoting",
   "description": "Direct Web Remoting Provider for Silex",
   "autoload": {
-    "psr-0": { "Sawar\\DWR": "lib/" }
-  },
-  "require": {
-    "zend": {
-        "url": "http://",
-        "type": "file"
+    "psr-0": { 
+      "Sawar\\DWR": "lib/", 
+      "Zend": "lib/vendor/zend/library/"
     }
   }
 }
